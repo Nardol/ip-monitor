@@ -29,6 +29,8 @@
 ## Commit & Pull Requests
 - Commits: imperative present, concise subject (< 72 chars), include rationale in body; reference issues like `Refs #123`.
 - PRs: include scope, reasoning, tests added/updated, and configuration snippets to reproduce. Ensure `ruff`, `mypy`, and tests pass locally.
+- Conventional Commits: commit messages are linted (`feat: …`, `fix: …`, `chore: …`). Use scopes judicieusement (ex: `feat(monitoring): …`).
+ - Guide: see `COMMIT_GUIDE.md` for allowed types/scopes, breaking changes, and examples.
 
 ## Security & Configuration Tips
 - Do not commit real API keys, tokens, or phone numbers; use `.env`/CI secrets. The sample `config.yaml` is for illustration only.
