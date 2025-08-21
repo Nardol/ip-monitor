@@ -33,3 +33,4 @@ dist/
 # Project-specific
 *.yaml
 !config.example.yaml
+!.pre-commit-config.yaml

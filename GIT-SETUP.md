@@ -23,3 +23,23 @@
 - Lint: `uv run ruff check .`
 - Tests: `uv run pytest -q`
 
+7) Pre-commit hooks (recommended)
+- Add dev dependency: already listed in `pyproject.toml` (`pre-commit`).
+- Install hooks: `uv run pre-commit install`
+- Optional pre-push tests: `uv run pre-commit install --hook-type pre-push`
+- Run once on all files: `uv run pre-commit run --all-files`
+- Keep hooks fresh: `uv run pre-commit autoupdate`
+
+Included hooks
+- Formatting: Ruff (official hooks: `astral-sh/ruff-pre-commit`)
+- Lint: Ruff (official hooks, with `--fix --exit-non-zero-on-fix`)
+- Lockfile: uv lock check (`astral-sh/uv-pre-commit` → `uv-lock`)
+- Types: `mypy` (uses project config)
+- Hygiene: trailing whitespace, EOF fixer
+- Pre-push: `pytest -q` (fast run)
+- Commit message lint: Conventional Commits (`compilerla/conventional-pre-commit`) on `commit-msg` with `--strict`.
+
+Commit messages
+- Follow Conventional Commits (see `COMMIT_GUIDE.md`).
+- Fix a message: `git commit --amend`.
+- Bypass (rare): `git commit --no-verify`.
