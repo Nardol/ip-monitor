@@ -1,38 +1,46 @@
-IP Monitor
-==========
+# IP Monitor
 
 Un script asynchrone de monitoring d’adresses IP et d’URL, avec persistance SQLite et notifications via ntfy.sh ou smsbox.net. Conçu pour être robuste (timeouts, concurrence bornée, nettoyage propre) et facilement configurable via YAML, variables d’environnement et options CLI.
 
-Sommaire
-- Présentation rapide
-- Prérequis
-- Installation (UV)
-- Utilisation (CLI)
-- Configuration YAML complète (+ schéma des champs)
-- Overrides via variables d’environnement et CLI (ordre de priorité)
-- Fonctionnement interne (BDD, ping, HTTP)
-- Déploiement (systemd)
-- Développement (tests, lint, types)
-- Dépannage (FAQ)
-- Licence
+## Sommaire
+- [Présentation rapide](#présentation-rapide)
+- [Prérequis](#prérequis)
+- [Installation (UV)](#installation-uv)
+- [Utilisation (CLI)](#utilisation-cli)
+- [Configuration YAML complète](#configuration-yaml-complète)
+- [Détails de schéma et validations](#détails-de-schéma-et-validations)
+- [Overrides via ENV et CLI (priorité)](#overrides-via-env-et-cli-priorité)
+- [Fonctionnement interne](#fonctionnement-interne)
+- [Déploiement (systemd)](#déploiement-systemd)
+- [Développement](#développement)
+- [Couverture de tests](#couverture-de-tests)
+- [Dépannage (FAQ)](#dépannage-faq)
+- [Licence](#licence)
+- [Feuille de route (TODO)](#feuille-de-route-todo)
 
-Présentation rapide
+## Présentation rapide
 - Surveille des IP (ICMP ping) et des URL (HTTP HEAD/GET) en parallèle.
 - Persistance du statut (down/up) dans SQLite pour n’alerter que sur changements.
 - Envoie des notifications via ntfy.sh ou smsbox.net.
 - Timeouts et concurrence configurables (YAML/ENV/CLI), pré‑vérification Internet optionnelle.
 
-Prérequis
+[⬆️ Retour en haut](#ip-monitor)
+
+## Prérequis
 - Python 3.12+
 - UV (gestion des dépendances) — version requise définie dans `pyproject.toml`.
 - iputils `ping` disponible dans le PATH (utilisé en sous‑processus).
 - Accès réseau sortant selon vos cibles.
 
-Installation (UV)
+[⬆️ Retour en haut](#ip-monitor)
+
+## Installation (UV)
 - Installer les dépendances: `uv sync`
 - Optionnel (développement): `uv sync --all-groups` ou `uv sync --group dev`
 
-Utilisation (CLI)
+[⬆️ Retour en haut](#ip-monitor)
+
+## Utilisation (CLI)
 - Lancer: `uv run ip-monitor -c config.yaml`
 - Options principales:
   - `-c/--config`: chemin du fichier YAML (par défaut intégré à l’appli)
@@ -45,7 +53,9 @@ Utilisation (CLI)
   - `--concurrency`: vérifications concurrentes max (défaut YAML ou 20)
   - `--quiet` / `--no-quiet`: désactive/force les messages de progression (par défaut: affichés). Peut aussi être contrôlé par `IPM_QUIET=1`.
 
-Configuration YAML complète
+[⬆️ Retour en haut](#ip-monitor)
+
+## Configuration YAML complète
 Placez un fichier `config.yaml`, par exemple:
 
 ```yaml
@@ -83,7 +93,9 @@ Fichier d’exemple: `config.example.yaml` est fourni dans le dépôt. Copiez‑
 - Local: `cp config.example.yaml config.yaml`
 - Système: `sudo install -D -m 640 config.example.yaml /etc/ip-monitor/config.yaml`
 
-Détails de schéma et validations
+[⬆️ Retour en haut](#ip-monitor)
+
+## Détails de schéma et validations
 - `db_path` (Path): dossier parent existant + permission d’écriture requise.
 - `notify_method` (enum): `ntfy` ou `smsbox`.
 - `ntfy` (si `notify_method=ntfy`):
@@ -97,7 +109,9 @@ Détails de schéma et validations
 - Au moins une entrée dans `ips` ou `urls` est requise.
 - Paramètres de performance: tous strictement > 0.
 
-Overrides via ENV et CLI (priorité)
+[⬆️ Retour en haut](#ip-monitor)
+
+## Overrides via ENV et CLI (priorité)
 - Ordre de priorité: CLI > variables d’environnement > YAML > valeurs par défaut.
 - Variables d’environnement supportées:
   - `IPM_PRECHECK_ENABLED` (0/1, true/false, yes/no, on/off)
@@ -110,14 +124,18 @@ Overrides via ENV et CLI (priorité)
   - ENV: `IPM_CONCURRENCY=10 IPM_HTTP_TIMEOUT=5 uv run ip-monitor -c config.yaml`
   - CLI: `uv run ip-monitor -c config.yaml --concurrency 10 --http-timeout 5`
 
-Fonctionnement interne
+[⬆️ Retour en haut](#ip-monitor)
+
+## Fonctionnement interne
 - Pré‑vérification Internet: ping `1.1.1.1` (optionnelle). Si échec, arrêt sans ouvrir la BDD.
 - Ping IP: exécute `ping -q -s26 -c5 <ip>` en sous‑processus. On force la locale (`LC_ALL=C`) et on se base sur le code retour (`0` = au moins une réponse). Chaque ping est borné par `asyncio.wait_for`.
 - Vérification URL: `HEAD` puis `GET` si nécessaire (HTTP 200 attendu). Timeout global via `aiohttp.ClientTimeout(total=...)`.
 - Concurrence: limitée par sémaphore (`--concurrency`). Les tâches sont agrégées avec `asyncio.gather(..., return_exceptions=True)` et les exceptions sont journalisées sans stopper l’ensemble.
 - Persistance SQLite: table `status(type TEXT, address TEXT, down INTEGER)`, unique `(type,address)`. Nettoyage des entrées obsolètes avant chaque cycle.
 
-Déploiement (systemd)
+[⬆️ Retour en haut](#ip-monitor)
+
+## Déploiement (systemd)
 Exemple d’unité systemd minimaliste:
 
 ```ini
@@ -141,13 +159,17 @@ Environment=IPM_QUIET=1
 WantedBy=multi-user.target
 ```
 
-Développement
+[⬆️ Retour en haut](#ip-monitor)
+
+## Développement
 - Tests unitaires: `uv run pytest -q`
 - Lint (ruff): `uv run ruff check .`
 - Types (mypy): `uv run mypy`
 - Formatage: suivez la config ruff (E501 ignoré, longueur 80 dans config ruff).
 
-Couverture de tests
+[⬆️ Retour en haut](#ip-monitor)
+
+## Couverture de tests
 - Mesure: activée via pytest-cov, configurée dans `pyproject.toml`.
 - Commandes utiles:
   - Rapide: `uv run pytest`
@@ -157,7 +179,9 @@ Couverture de tests
 - Seuil en échec: 95% (modifiable via `--cov-fail-under` ou `tool.coverage.report.fail_under`).
 - Cible: viser ~100%; ajuster au besoin et compléter les tests.
 
-Dépannage (FAQ)
+[⬆️ Retour en haut](#ip-monitor)
+
+## Dépannage (FAQ)
 - « Pas de connexion à Internet. » au démarrage:
   - L’ICMP peut être filtré. Désactivez la pré‑vérif (`precheck_enabled: false` ou `--no-precheck`) ou augmentez `precheck_timeout`.
 - IP marquée down trop vite:
@@ -169,11 +193,17 @@ Dépannage (FAQ)
 - `ping` introuvable:
   - Installez iputils (`ping` dans le PATH du service). Le script force `LC_ALL=C`, la sortie n’est pas parsée (code retour utilisé).
 
-Licence
+[⬆️ Retour en haut](#ip-monitor)
+
+## Licence
 - MIT (cf. `pyproject.toml`).
 
-Feuille de route (TODO)
+[⬆️ Retour en haut](#ip-monitor)
+
+## Feuille de route (TODO)
 - Timer et service systemd: fournir unités `*.service` et `*.timer`, avec exemple d’installation et d’override via Environment.
 - Packaging Debian: ajouter un dossier `debian/` (control, rules, install), dépendances, intégration systemd (dh_systemd), scripts postinst/prerm si nécessaire.
 - Manpage: rédiger une page man pour `ip-monitor` (section 1), utile pour l’intégration Debian et l’aide locale.
 - Couverture de tests: ajouter la mesure de coverage (objectif ~100%), configurer précisément pytest et coverage dans `pyproject.toml` (inclure/exclure, branch coverage, seuils), et envisager un réglage plus strict de mypy si pertinent.
+
+[⬆️ Retour en haut](#ip-monitor)
