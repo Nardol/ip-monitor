@@ -1,0 +1,35 @@
+# Python caches
+__pycache__/
+*.py[cod]
+
+# Virtual envs
+.venv/
+
+# Test and coverage outputs
+.pytest_cache/
+htmlcov/
+.coverage
+coverage.xml
+
+# Linters/type checkers
+.ruff_cache/
+.mypy_cache/
+
+# Build artifacts
+build/
+dist/
+*.spec
+
+# Local data files
+*.db
+*.sqlite
+.env
+
+# Editors/OS
+.DS_Store
+.idea/
+.vscode/
+
+# Project-specific
+*.yaml
+!config.example.yaml

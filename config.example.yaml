@@ -1,0 +1,35 @@
+# Example configuration for ip-monitor
+
+# Path to the SQLite database (must be writable by the service user)
+db_path: /var/lib/ip-monitor/ipmonitor.db
+
+# Notification backend: "ntfy" or "smsbox"
+notify_method: ntfy
+
+# ntfy.sh settings (required if notify_method=ntfy)
+ntfy:
+  server: http://ntfy.example.local
+  topic: monitoring
+
+# smsbox.net settings (required if notify_method=smsbox)
+# smsbox:
+#   api_key: "your_api_key"
+#   recipient: "+33601020304"
+
+# Targets to monitor (at least one entry among ips or urls)
+ips:
+  - ip: 1.1.1.1
+    description: Cloudflare DNS
+
+urls:
+  - url: example.org
+    description: Example website
+
+# Optional performance settings (defaults shown for reference)
+# precheck_enabled: true
+# precheck_timeout: 10.0
+# ping_timeout: 15.0
+# http_timeout: 7.0
+# http_connector_limit: 50
+# concurrency: 20
+

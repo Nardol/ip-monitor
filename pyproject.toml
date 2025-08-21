@@ -1,0 +1,130 @@
+[build-system]
+requires = ["uv_build>=0.8.3,<0.9.0"]
+build-backend = "uv_build"
+
+[project]
+name = "ip-monitor"
+version = "1.0.0"
+description = "Un script de monitoring d'adresses IP et URL utilisant asyncio."
+authors = [
+    {name = "Patrick ZAJDA", email = "patrick@zajda.fr"}
+]
+license = {text = "MIT license"}
+requires-python = ">=3.12"
+dependencies = [
+    "aiofiles>=24.1.0",
+    "aiohttp>=3.10.5",
+    "aiontfy>=0.5.3",
+    "aiosqlite>=0.20.0",
+    "argcomplete>=3.5.0",
+    "pydantic>=2.9.0",
+    "pysmsboxnet>=2024.6.1",
+    "pyyaml>=6.0.2",
+    "types-aiofiles>=24.1.0.20240626",
+    "types-pyyaml>=6.0.12.20240808",
+    "uvloop>=0.21.0",
+]
+
+[project.scripts]
+ip-monitor = "ip_monitor:entry_point"
+
+[dependency-groups]
+dev = [
+    "mypy>=1.11.2",
+    "pyinstaller>=6.11.1",
+    "ruff>=0.6.4",
+    "pytest>=8.3.2",
+    "pytest-asyncio>=0.24.0",
+    "pytest-cov>=5.0.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = [
+  "--strict-config",
+  "--strict-markers",
+  "-ra",
+  "--maxfail=1",
+  "--cov=src/ip_monitor",
+  "--cov-branch",
+  "--cov-report=term-missing:skip-covered",
+  "--cov-report=xml",
+  "--cov-report=html",
+  "--cov-fail-under=95",
+]
+filterwarnings = [
+  "error::DeprecationWarning",
+  "error::FutureWarning",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["src/ip_monitor"]
+omit = [
+  "*/__pycache__/*",
+]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
+precision = 1
+exclude_also = [
+  "if TYPE_CHECKING:",
+  "if __name__ == \"__main__\":",
+]
+fail_under = 95
+
+[tool.uv]
+required-version = ">=0.5.19"
+
+[tool.ruff]
+line-length = 80
+
+[tool.ruff.lint]
+ignore = [
+    "D203",
+    "D213",
+    "E501",
+]
+extend-select = [
+    "A",
+    "ASYNC",
+    "B",
+    "C",
+    "C416",
+    "C9",
+    "D",
+    "E",
+    "F",
+    "I",
+    "N",
+    "PL",
+    "PLC",
+    "PLE",
+    "PLR",
+    "PLW",
+    "RUF",
+    "UP",
+    "W",
+]
+mccabe = {max-complexity = 25}
+
+[tool.mypy]
+python_version = "3.12"
+packages = ["ip_monitor"]
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_return_any = true
+warn_unreachable = true
+strict_equality = true
+exclude = [
+    '^dist/.*',
+    '^build/.*',
+    '^\.git/.*',
+    '^\.pytest_cache/.*',
+    '__pycache__/.*',
+]
