@@ -4,7 +4,7 @@ build-backend = "uv_build"
 
 [project]
 name = "ip-monitor"
-version = "1.0.0"
+version = "1.1.0"
 description = "Un script de monitoring d'adresses IP et URL utilisant asyncio."
 authors = [
     {name = "Patrick ZAJDA", email = "patrick@zajda.fr"}
