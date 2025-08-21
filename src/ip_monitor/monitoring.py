@@ -15,6 +15,7 @@ import asyncio
 import logging
 import os
 import sys
+from collections.abc import Awaitable
 from dataclasses import dataclass
 from datetime import datetime
 from http import client as http_client
@@ -252,18 +253,18 @@ async def _run_all_checks(
     async with ClientSession(timeout=timeout, connector=connector) as session:
         sem = asyncio.Semaphore(params.concurrency)
 
-        async def sem_task(coro):
+        async def sem_task(coro: Awaitable[None]) -> None:
             async with sem:
                 return await coro
 
-        tasks: list[asyncio.Task] = []
+        tasks: list[asyncio.Task[None]] = []
 
-        async def run_ip(ip: IpInfo):
+        async def run_ip(ip: IpInfo) -> None:
             if not params.quiet:
                 print(f"IP {ip.ip} — {ip.description}: démarré")
             return await check_ip(conn, ip, down, up, params.ping_timeout)
 
-        async def run_url(url: UrlInfo):
+        async def run_url(url: UrlInfo) -> None:
             if not params.quiet:
                 print(f"URL {url.url} — {url.description}: démarré")
             return await check_url_status(conn, session, url, down, up)
