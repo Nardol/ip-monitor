@@ -25,7 +25,8 @@
 
 7) Pre-commit hooks (recommended)
 - Add dev dependency: already listed in `pyproject.toml` (`pre-commit`).
-- Install hooks: `uv run pre-commit install`
+- Install default hooks (pre-commit): `uv run pre-commit install`
+- Install commit message hook: `uv run pre-commit install --hook-type commit-msg`
 - Optional pre-push tests: `uv run pre-commit install --hook-type pre-push`
 - Run once on all files: `uv run pre-commit run --all-files`
 - Keep hooks fresh: `uv run pre-commit autoupdate`
