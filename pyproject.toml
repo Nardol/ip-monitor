@@ -17,6 +17,7 @@ dependencies = [
     "aiontfy>=0.5.3",
     "aiosqlite>=0.20.0",
     "argcomplete>=3.5.0",
+    "platformdirs>=4.2.2",
     "pydantic>=2.9.0",
     "pysmsboxnet>=2024.6.1",
     "pyyaml>=6.0.2",

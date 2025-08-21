@@ -93,6 +93,16 @@ Fichier d’exemple: `config.example.yaml` est fourni dans le dépôt. Copiez‑
 - Local: `cp config.example.yaml config.yaml`
 - Système: `sudo install -D -m 640 config.example.yaml /etc/ip-monitor/config.yaml`
 
+Emplacements par défaut (platformdirs):
+- Config par défaut (ordre de recherche):
+  1. `IPM_CONFIG` (si défini)
+  2. `./config.yaml`
+  3. `${XDG_CONFIG_HOME:-~/.config}/ip-monitor/config.yaml`
+  4. `${XDG_CONFIG_DIRS}/ip-monitor/config.yaml` via `site_config_dir` (ex: `/etc/xdg/ip-monitor/config.yaml`)
+  5. Linux: `/etc/ip-monitor/config.yaml`
+- Base de données par défaut: `${XDG_DATA_HOME:-~/.local/share}/ip-monitor/ipmonitor.db`
+  - Le dossier de données est créé automatiquement si nécessaire.
+
 [⬆️ Retour en haut](#ip-monitor)
 
 ## Détails de schéma et validations
@@ -154,12 +164,28 @@ Group=ipmonitor
 Environment=IPM_CONCURRENCY=20
 # Rendez le service silencieux si souhaité (prints désactivés)
 Environment=IPM_QUIET=1
+## Alternative: pointer explicitement vers un fichier de config
+# Environment=IPM_CONFIG=/etc/ip-monitor/config.yaml
 
 [Install]
 WantedBy=multi-user.target
 ```
 
 [⬆️ Retour en haut](#ip-monitor)
+
+## Déploiement serveur
+- Emplacement recommandé de la configuration système: `/etc/ip-monitor/config.yaml`.
+- Installation rapide (droits lecture groupe seulement):
+  - `sudo install -d -m 755 /etc/ip-monitor`
+  - `sudo install -m 640 config.example.yaml /etc/ip-monitor/config.yaml`
+  - Optionnel: `sudo chown root:ipmonitor /etc/ip-monitor/config.yaml`
+- Découverte automatique: ip-monitor cherchera aussi dans `/etc/ip-monitor/config.yaml` par défaut; l’option `-c` est donc facultative sur un serveur.
+- Overrides et ordre de recherche:
+  - Vous pouvez forcer le chemin via `IPM_CONFIG=/chemin/config.yaml` ou l’option `-c`.
+  - Ordre de recherche sans override: `./config.yaml` → `${user_config_dir}/ip-monitor/config.yaml` → `${site_config_dir}/ip-monitor/config.yaml` (ex: `/etc/xdg/ip-monitor/config.yaml`) → `/etc/ip-monitor/config.yaml`.
+- Base de données: par défaut dans le répertoire de données utilisateur du service (ex: `/var/lib/<user>/.local/share/ip-monitor/ipmonitor.db`).
+  - Recommandé: définir explicitement `db_path: /var/lib/ip-monitor/ipmonitor.db` dans le YAML et créer le dossier avec les droits adéquats:
+    - `sudo install -d -m 750 -o ipmonitor -g ipmonitor /var/lib/ip-monitor`
 
 ## Développement
 - Tests unitaires: `uv run pytest -q`
