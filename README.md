@@ -146,19 +146,25 @@ Emplacements par défaut (platformdirs):
 [⬆️ Retour en haut](#ip-monitor)
 
 ## Déploiement (systemd)
-Exemple d’unité systemd minimaliste:
+
+Le binaire effectue une seule passe puis s’arrête. L’intégration recommandée sous systemd est donc: un service `oneshot` déclenché par un `timer`.
+
+Des unités prêtes à l’emploi sont fournies dans `contrib/systemd/`.
+
+### Unités
+
+`contrib/systemd/ip-monitor.service` (oneshot):
 
 ```ini
 [Unit]
-Description=IP Monitor
+Description=IP Monitor (oneshot)
 After=network-online.target
 Wants=network-online.target
 
 [Service]
-Type=simple
+Type=oneshot
 WorkingDirectory=/opt/ip-monitor
 ExecStart=/usr/bin/env uv run ip-monitor -c /etc/ip-monitor/config.yaml -l INFO
-Restart=on-failure
 User=ipmonitor
 Group=ipmonitor
 Environment=IPM_CONCURRENCY=20
@@ -166,10 +172,53 @@ Environment=IPM_CONCURRENCY=20
 Environment=IPM_QUIET=1
 ## Alternative: pointer explicitement vers un fichier de config
 # Environment=IPM_CONFIG=/etc/ip-monitor/config.yaml
+```
+
+`contrib/systemd/ip-monitor.timer`:
+
+```ini
+[Unit]
+Description=Planification périodique d'IP Monitor
+
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=5min
+AccuracySec=30s
+Persistent=true
+Unit=ip-monitor.service
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=timers.target
 ```
+
+### Installation
+
+1) Copier les unités dans `/etc/systemd/system/`:
+
+```bash
+sudo install -m 644 contrib/systemd/ip-monitor.service /etc/systemd/system/
+sudo install -m 644 contrib/systemd/ip-monitor.timer   /etc/systemd/system/
+```
+
+2) Recharger et activer le timer (ne pas activer le service) :
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable --now ip-monitor.timer
+```
+
+3) Vérifier:
+
+```bash
+systemctl status ip-monitor.timer
+systemctl list-timers ip-monitor*
+systemctl status ip-monitor.service   # dernier run
+```
+
+Remarques:
+- Le service ne boucle pas: il s’exécute une fois à chaque déclenchement du timer.
+- Ajustez la périodicité via `OnUnitActiveSec=` et la tolérance via `AccuracySec=`.
+- Les paramètres d’exécution peuvent être surchargés via `Environment=` ou des drop‑ins (`systemctl edit ip-monitor.service`).
 
 [⬆️ Retour en haut](#ip-monitor)
 

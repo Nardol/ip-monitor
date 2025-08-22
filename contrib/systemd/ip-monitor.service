@@ -1,0 +1,16 @@
+[Unit]
+Description=IP Monitor (oneshot)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/ip-monitor
+ExecStart=/usr/bin/env uv run ip-monitor -c /etc/ip-monitor/config.yaml -l INFO
+User=ipmonitor
+Group=ipmonitor
+Environment=IPM_CONCURRENCY=20
+# Rendez le service silencieux si souhaité (prints désactivés)
+Environment=IPM_QUIET=1
+## Alternative: pointer explicitement vers un fichier de config
+# Environment=IPM_CONFIG=/etc/ip-monitor/config.yaml
