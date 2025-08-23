@@ -19,12 +19,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup uv (for uv-lock hook)
+      - name: Setup uv
         uses: astral-sh/setup-uv@v6
         with:
           python-version: "3.12"
 
-      - name: Run pre-commit on all files
-        uses: pre-commit/action@v3.0.1
-        with:
-          extra_args: --all-files
+      - name: Install deps (all groups)
+        run: uv sync --all-groups --frozen
+
+      - name: Run pre-commit on all files (uv)
+        run: uv run pre-commit run --all-files
