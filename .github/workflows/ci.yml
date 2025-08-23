@@ -104,7 +104,6 @@ jobs:
 
       - name: Run Bandit (recursive on src, exclude tests)
         run: uvx bandit -r src -x tests -f json -o bandit.json
-        continue-on-error: true
 
       - name: Upload Bandit report
         if: ${{ always() }}
