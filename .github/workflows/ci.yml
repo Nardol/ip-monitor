@@ -59,17 +59,21 @@ jobs:
         run: uv run --frozen mypy
 
   test:
-    name: Tests
+    name: Tests (py ${{ matrix.python-version }})
     runs-on: ubuntu-latest
     needs: [lint, typecheck]
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.12", "3.13"]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup uv + Python 3.12
+      - name: Setup uv + Python ${{ matrix.python-version }}
         uses: astral-sh/setup-uv@v6
         with:
-          python-version: "3.12"
+          python-version: ${{ matrix.python-version }}
 
       - name: Install deps (all groups)
         run: uv sync --frozen --all-groups
@@ -92,15 +96,21 @@ jobs:
           if-no-files-found: error
 
   bandit:
-    name: Bandit
+    name: Bandit (py ${{ matrix.python-version }})
     runs-on: ubuntu-latest
     needs: [lint]
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.12", "3.13"]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup uv
+      - name: Setup uv + Python ${{ matrix.python-version }}
         uses: astral-sh/setup-uv@v6
+        with:
+          python-version: ${{ matrix.python-version }}
 
       - name: Run Bandit (recursive on src, exclude tests)
         run: uv run --frozen bandit -r src -x tests -l -ii -f json -o bandit.json
