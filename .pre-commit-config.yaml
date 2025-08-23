@@ -25,7 +25,7 @@ repos:
     hooks:
       - id: bandit
         name: bandit (security)
-        args: ["-ll", "-iii", "--quiet"]
+        args: ["-l", "-ii", "--quiet"]
         exclude: ^tests/
 
   # Project local hooks
