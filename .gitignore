@@ -11,6 +11,10 @@ htmlcov/
 .coverage
 coverage.xml
 
+# Bandit reports (local runs)
+bandit.json
+.bandit-*.json
+
 # Linters/type checkers
 .ruff_cache/
 .mypy_cache/
