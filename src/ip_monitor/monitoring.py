@@ -359,12 +359,14 @@ async def remove_old_entries(
     if current_ips:
         # Génère "?, ?, ?" selon le nombre d'IPs
         placeholders = ",".join("?" for _ in current_ips)
+        # Bandit B608 false positive: placeholders is a fixed string of '?' and
+        # values are passed as parameters, preventing SQL injection.
         await conn.execute(
             f"""
             DELETE FROM status
             WHERE type = 'IP'
               AND address NOT IN ({placeholders})
-            """,
+            """,  # nosec: B608 - safe parameterization
             tuple(current_ips),
         )
     else:
@@ -374,12 +376,13 @@ async def remove_old_entries(
     # 2) Suppression des URLs obsolètes
     if current_urls:
         placeholders = ",".join("?" for _ in current_urls)
+        # Bandit B608 false positive (see above comment).
         await conn.execute(
             f"""
             DELETE FROM status
             WHERE type = 'URL'
               AND address NOT IN ({placeholders})
-            """,
+            """,  # nosec: B608 - safe parameterization
             tuple(current_urls),
         )
     else:

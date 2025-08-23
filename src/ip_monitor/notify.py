@@ -54,8 +54,18 @@ async def notify_smsbox(
 async def notify(session: ClientSession, config: Config, message: str) -> None:
     """Envoie une notification."""
     if config.notify_method == NotifyMethod.NTFY_SH:
-        assert config.ntfy is not None
+        if (
+            config.ntfy is None
+        ):  # pragma: no cover - garanti par la validation Config
+            raise ValueError(
+                "Configuration Ntfy manquante pour le backend sélectionné"
+            )
         await notify_ntfy(session, config.ntfy, message)
     elif config.notify_method == NotifyMethod.SMSBOX:
-        assert config.smsbox is not None
+        if (
+            config.smsbox is None
+        ):  # pragma: no cover - garanti par la validation Config
+            raise ValueError(
+                "Configuration SMSBox manquante pour le backend sélectionné"
+            )
         await notify_smsbox(session, config.smsbox, message)
