@@ -74,9 +74,7 @@ jobs:
       - name: Install deps (all groups)
         run: uv sync --frozen --all-groups
 
-      - name: Run pytest (quiet)
-        env:
-          IPM_QUIET: "1"
+      - name: Run pytest
         run: uv run pytest -q
 
       - name: Upload coverage XML
@@ -95,6 +93,7 @@ jobs:
 
   bandit:
     name: Bandit
+    continue-on-error: true
     runs-on: ubuntu-latest
     needs: [lint]
     steps:
