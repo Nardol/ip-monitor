@@ -76,7 +76,7 @@
     }
   ],
 
-  
+
   "regexManagers": [
     {
       "fileMatch": ["^pyproject\\.toml$"],
