@@ -103,7 +103,7 @@ jobs:
         uses: astral-sh/setup-uv@v6
 
       - name: Run Bandit (recursive on src, exclude tests)
-        run: uvx bandit==1.7.9 -r src -x tests -l -ii -f json -o bandit.json
+        run: uv run bandit -r src -x tests -l -ii -f json -o bandit.json
 
       - name: Upload Bandit report
         if: ${{ always() }}
