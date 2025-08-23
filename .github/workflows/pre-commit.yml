@@ -1,0 +1,31 @@
+name: pre-commit
+
+on:
+  push:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  run:
+    name: Run pre-commit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install deps (all groups)
+        run: uv sync --all-groups --frozen
+
+      - name: Run pre-commit on all files (uv)
+        run: uv run --frozen pre-commit run --all-files

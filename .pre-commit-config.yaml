@@ -19,18 +19,27 @@ repos:
     hooks:
       - id: uv-lock
 
+  # Security static analysis
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.9
+    hooks:
+      - id: bandit
+        name: bandit (security)
+        args: ["-l", "-ii", "--quiet"]
+        exclude: ^tests/
+
   # Project local hooks
   - repo: local
     hooks:
       - id: mypy
         name: mypy (project config)
-        entry: uv run mypy
+        entry: uv run --frozen mypy
         language: system
         types: [python]
         pass_filenames: false
       - id: pytest
         name: pytest (quick)
-        entry: uv run pytest -q
+        entry: uv run --frozen pytest -q
         language: system
         pass_filenames: false
         stages: [pre-push]
