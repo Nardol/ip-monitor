@@ -3,110 +3,26 @@
   "extends": [
     "config:recommended",
     ":semanticCommits",
-    ":prHourlyLimitNone",
-    "group:allNonMajor",
-    ":pinGitHubActionDigests"
+    ":rebaseStalePrs",
+    "group:recommended",
+    ":pinGitHubActionDigests",
+    ":enablePreCommit",
+    ":enableVulnerabilityAlertsWithLabel('security')"
   ],
   "timezone": "Europe/Paris",
   "dependencyDashboard": true,
   "labels": ["deps"],
-  "schedule": ["after 08:00 and before 18:00 on monday"],
-
   "enabledManagers": ["pep621", "github-actions", "pre-commit"],
-
-  "rangeStrategy": "widen",
-
+  "prConcurrentLimit": 5,
   "packageRules": [
     {
-      "matchManagers": ["github-actions"],
-      "groupName": "GitHub Actions",
-      "semanticCommitType": "chore",
-      "semanticCommitScope": "actions",
-      "stabilityDays": 3,
+      "matchUpdateTypes": ["minor", "patch", "digest"],
       "automerge": true,
-      "automergeType": "pr",
-      "matchUpdateTypes": ["minor", "patch", "digest"]
-    },
-    {
-      "matchManagers": ["pre-commit"],
-      "groupName": "pre-commit hooks",
-      "semanticCommitType": "chore",
-      "semanticCommitScope": "pre-commit",
-      "stabilityDays": 3,
-      "automerge": true,
-      "automergeType": "pr",
-      "matchUpdateTypes": ["minor", "patch"]
-    },
-    {
-      "matchManagers": ["pep621"],
-      "matchPackageNames": [
-        "ruff",
-        "mypy",
-        "pytest",
-        "pytest-asyncio",
-        "pytest-cov",
-        "bandit",
-        "pre-commit",
-        "pyinstaller"
-      ],
-      "groupName": "Python dev tools",
-      "semanticCommitType": "chore",
-      "semanticCommitScope": "dev-deps",
-      "stabilityDays": 3,
-      "automerge": true,
-      "automergeType": "pr",
-      "matchUpdateTypes": ["minor", "patch"]
-    },
-    {
-      "matchManagers": ["pep621"],
-      "excludePackageNames": [
-        "ruff",
-        "mypy",
-        "pytest",
-        "pytest-asyncio",
-        "pytest-cov",
-        "bandit",
-        "pre-commit",
-        "pyinstaller"
-      ],
-      "groupName": "Python runtime deps",
-      "semanticCommitType": "chore",
-      "semanticCommitScope": "deps",
-      "stabilityDays": 3
+      "automergeType": "pr"
     }
   ],
-
-
-  "regexManagers": [
-    {
-      "fileMatch": ["^pyproject\\.toml$"],
-      "matchStrings": [
-        "(?m)^\\s*\"(?<depName>[A-Za-z0-9_.-]+)\\s*(?:[<>=!~^]+\\s*)?(?<currentValue>[^\"]+)\"\\s*,\\s*$"
-      ],
-      "datasourceTemplate": "pypi",
-      "versioningTemplate": "pep440",
-      "extractVersionTemplate": "{{currentValue}}",
-      "matchPackageNames": [
-        "ruff",
-        "mypy",
-        "pytest",
-        "pytest-asyncio",
-        "pytest-cov",
-        "bandit",
-        "pre-commit",
-        "pyinstaller"
-      ],
-      "semanticCommitType": "chore",
-      "semanticCommitScope": "dev-deps"
-    }
-  ],
-
   "lockFileMaintenance": {
     "enabled": true,
-    "schedule": ["before 6am on monday"],
-    "semanticCommitType": "chore",
-    "semanticCommitScope": "lockfile",
-    "automerge": true,
-    "automergeType": "pr"
+    "automerge": true
   }
 }
