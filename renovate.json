@@ -5,14 +5,13 @@
     ":semanticCommits",
     ":rebaseStalePrs",
     "group:recommended",
-    ":pinGitHubActionDigests",
-    ":enablePreCommit",
     ":enableVulnerabilityAlertsWithLabel('security')"
   ],
   "timezone": "Europe/Paris",
   "dependencyDashboard": true,
   "labels": ["deps"],
   "enabledManagers": ["pep621", "github-actions", "pre-commit"],
+  "pinDigests": true,
   "prConcurrentLimit": 5,
   "packageRules": [
     {
