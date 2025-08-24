@@ -36,3 +36,4 @@ jobs:
             tests
             docs
             ci
+            deps
