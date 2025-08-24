@@ -9,6 +9,7 @@
   ],
   "timezone": "Europe/Paris",
   "dependencyDashboard": true,
+  "dependencyDashboardApproval": false,
   "labels": ["deps"],
   "enabledManagers": ["pep621", "github-actions", "pre-commit"],
   "pinDigests": true,
