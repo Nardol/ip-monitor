@@ -38,6 +38,13 @@ Un script asynchrone de monitoring d’adresses IP et d’URL, avec persistance 
 - Installer les dépendances: `uv sync`
 - Optionnel (développement): `uv sync --all-groups` ou `uv sync --group dev`
 
+### Important — toujours via uv run
+- Exécutez toujours les outils via `uv run` (tests, lint, types, CLI).
+- Ne lancez pas directement les exécutables (ex: `pytest`, `.venv/bin/pytest`, `ruff`, `mypy`, ou `ip-monitor` sans `uv`).
+- Raison: cela garantit l’usage du lockfile (`uv.lock`), des bons marqueurs de plateforme et évite les incohérences d’environnement.
+- Parité CI: la CI utilise `uv sync --frozen --all-groups` et `uv run --frozen …`; reproduisez ces commandes localement.
+- En environnements contraints, `uv run` peut demander des autorisations (réseau/écriture de rapports) — accordez-les plutôt que de contourner `uv`.
+
 [⬆️ Retour en haut](#ip-monitor)
 
 ## Utilisation (CLI)
