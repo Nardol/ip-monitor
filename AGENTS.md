@@ -12,6 +12,18 @@
 - Lint: `uv run ruff check .`
 - Types: `uv run mypy`
 
+## uv Usage Policy (Required)
+- Always execute tools via `uv run` and install via `uv sync`.
+- Do NOT call virtualenv/system executables directly (e.g. `.venv/bin/pytest`, `pytest`, `ruff`, `mypy`, or `ip-monitor` sans `uv`).
+- Rationale: guarantees the lockfile (`uv.lock`) is honored, consistent resolver/markers, and avoids env/sandbox mismatches seen when bypassing `uv`.
+- CI parity: workflows already use `uv sync --frozen --all-groups` and `uv run --frozen …`; reproduce the same locally.
+- Approvals: in constrained environments, `uv run` may require explicit approval (network access, writing coverage reports); request approval rather than bypassing `uv`.
+- Quick refs:
+  - Tests: `uv run pytest -q`
+  - Lint: `uv run ruff check .`
+  - Types: `uv run mypy`
+  - CLI: `uv run ip-monitor -c config.yaml`
+
 ## Coding Style & Conventions
 - Language: Python 3.12, async-first. Indentation: 4 spaces. Prefer small, pure helpers.
 - Naming: modules/files `snake_case`; functions/vars `snake_case`; classes `PascalCase`.
