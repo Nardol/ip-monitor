@@ -11,7 +11,7 @@
   "dependencyDashboard": true,
   "dependencyDashboardApproval": false,
   "labels": ["deps"],
-  "enabledManagers": ["pep621", "github-actions", "pre-commit"],
+  "enabledManagers": ["pep621", "github-actions"],
   "pinDigests": true,
   "prConcurrentLimit": 5,
   "packageRules": [
