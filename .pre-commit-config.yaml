@@ -62,3 +62,8 @@ ci:
     - "mypy"
     - "uv-lock"
     - "renovate-config-validator"
+  # Make pre-commit.ci's autoupdate PRs pass Conventional Commits checks
+  autoupdate_commit_msg: "chore(ci): update pre-commit hooks"
+  autoupdate_pr_title: "chore(ci): update pre-commit hooks"
+  # Also make autofix commits (formatting, etc.) conventional when CI pushes them
+  autofix_commit_msg: "chore(ci): auto fixes from pre-commit hooks"
