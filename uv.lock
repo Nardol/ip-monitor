@@ -73,16 +73,16 @@ wheels = [
 
 [[package]]
 name = "aiontfy"
-version = "0.5.5"
+version = "0.6.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiohttp" },
     { name = "mashumaro" },
     { name = "orjson" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/6c/42/b5319af30e5144a0a5ce378f0c575d0f935b4e8472e3e9ff4dfc5b18aa33/aiontfy-0.5.5.tar.gz", hash = "sha256:219a5b1a9c3231604f0d90f851d4b9f11bb60a503a73d811f72e0dd129a1781f", size = 24178, upload-time = "2025-09-07T14:17:06.846Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/15/64/6dc46459840cadc7cfe3098408c7c08e372a08d36593af0df07ab3ba4ba0/aiontfy-0.6.0.tar.gz", hash = "sha256:93f6112874ce69368f1cde1c56f552a58f590bcb1373821a22f67c3bac4c1f67", size = 24777, upload-time = "2025-09-17T23:59:32.375Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/0d/e2/4cf6458ffdefe530343e8657e5c0560b39316d315c501d098d49fdc11e6c/aiontfy-0.5.5-py3-none-any.whl", hash = "sha256:7b11c3ca911b4ba608967809c18efb2ca68a96cf58049b49512fef8a54c6f893", size = 13627, upload-time = "2025-09-07T14:17:07.771Z" },
+    { url = "https://files.pythonhosted.org/packages/46/81/19f86ef67234c17b0fac4536138f011026159eb601f5b783b6911a3e2c1c/aiontfy-0.6.0-py3-none-any.whl", hash = "sha256:1a4c49cb8f81aa0ea2d1a0c07742aa76f4fcbb999ee1a6e0ef45e3cc118452d1", size = 14200, upload-time = "2025-09-17T23:59:31.166Z" },
 ]
 
 [[package]]
@@ -383,7 +383,7 @@ dev = [
 requires-dist = [
     { name = "aiofiles", specifier = "~=24.1" },
     { name = "aiohttp", specifier = "~=3.12.15" },
-    { name = "aiontfy", specifier = "~=0.5.3" },
+    { name = "aiontfy", specifier = "~=0.6.0" },
     { name = "aiosqlite", specifier = "~=0.21.0" },
     { name = "argcomplete", specifier = "~=3.5" },
     { name = "platformdirs", specifier = "~=4.2" },
