@@ -407,7 +407,7 @@ async def ping(ip: str) -> bool:
         stderr=asyncio.subprocess.DEVNULL,
         env=env,
     )
-    stdout, stderr = await proc.communicate()
+    stdout, _stderr = await proc.communicate()
     logging.debug("Code retour ping: %s", proc.returncode)
     if stdout:
         logging.debug("Sortie ping brute :\n%s", stdout.decode(errors="ignore"))
