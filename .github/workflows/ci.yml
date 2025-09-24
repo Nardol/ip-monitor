@@ -122,3 +122,24 @@ jobs:
           name: bandit-report-${{ matrix.python-version }}
           path: bandit.json
           if-no-files-found: error
+
+  all-green:
+    name: All green
+    runs-on: ubuntu-latest
+    # Agrège tous les jobs CI; reste stable si la matrix change
+    needs: [lint, typecheck, test, bandit]
+    if: ${{ always() }}
+    steps:
+      - name: Vérifier les résultats des jobs requis
+        run: |
+          python3 - << 'PY'
+          import json, os, sys
+          needs = json.loads(os.environ['NEEDS_JSON'])
+          failed = [name for name, info in needs.items() if info.get('result') != 'success']
+          if failed:
+              print('Echec de:', ', '.join(failed))
+              sys.exit(1)
+          print('Tous les jobs requis sont verts.')
+          PY
+        env:
+          NEEDS_JSON: ${{ toJSON(needs) }}
