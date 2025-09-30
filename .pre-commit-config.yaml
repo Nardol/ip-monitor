@@ -7,7 +7,7 @@ repos:
 
   # Official Ruff hooks from astral-sh
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.13.1
+    rev: v0.13.2
     hooks:
       - id: ruff-check
         args: ["--fix"]
@@ -15,7 +15,7 @@ repos:
 
   # Official uv hooks: ensure uv.lock is in sync
   - repo: https://github.com/astral-sh/uv-pre-commit
-    rev: 0.8.19
+    rev: 0.8.22
     hooks:
       - id: uv-lock
 
@@ -30,7 +30,7 @@ repos:
 
   # Renovate pre-commit hook
   - repo: https://github.com/renovatebot/pre-commit-hooks
-    rev: 41.125.0
+    rev: 41.132.1
     hooks:
       - id: renovate-config-validator
 
