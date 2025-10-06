@@ -16,7 +16,7 @@ classifiers = [
 ]
 dependencies = [
     "aiofiles~=24.1",
-    "aiohttp~=3.12.15",
+    "aiohttp~=3.13.0",
     "aiontfy~=0.6.0",
     "aiosqlite~=0.21.0",
     "argcomplete~=3.5",
