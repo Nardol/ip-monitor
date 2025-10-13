@@ -15,7 +15,7 @@ classifiers = [
     "Operating System :: POSIX :: Linux",
 ]
 dependencies = [
-    "aiofiles~=24.1",
+    "aiofiles~=25.1",
     "aiohttp~=3.13.0",
     "aiontfy~=0.6.0",
     "aiosqlite~=0.21.0",
